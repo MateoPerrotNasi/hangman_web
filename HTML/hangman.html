@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendu</title>
+</head>
+<body>
+    {{if gt .Attempt 0}}
+        <h4>Bienvenue</h4>
+        <div>
+            <span>Il te reste {{.Attempt}} essaies</span>
+            <br>
+            <span>Tu es en difficulté: {{.Difficulty}}</span>
+        </div>
+        <br>
+        <div>
+            Vous devez deviner {{.HiddenWord}}
+            <form method="POST">
+                <button type="button">Appuie pour perdre un essaie</button>
+            </form>
+        </div>
+    {{else}}
+        <div>Tu as perdu</div>
+    {{end}}
+</body>
+</html>

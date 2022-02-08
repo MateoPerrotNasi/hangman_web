@@ -1,7 +1,10 @@
 package main
 
-func (h *Hangman) CreateHidden() {
-	for i := 0; i < len(h.Word); i++ {
+import "fmt"
+
+func (h *Hangman) CreateHidden(Word string) {
+	for i := 0; i < len(Word); i++ {
 		h.HiddenWord = append(h.HiddenWord, "_")
 	}
+	fmt.Println("Create Hiddenword:",h.HiddenWord)
 }

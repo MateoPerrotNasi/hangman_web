@@ -10,19 +10,24 @@
     {{if gt .Attempt 0}}
         <h4>Bienvenue</h4>
         <div>
-            <span>Il te reste {{.Attempt}} essaies</span>
-            <br>
-            <span>Tu es en difficulté: {{.Difficulty}}</span>
+            <span>Il te reste {{.Attempt}} essais</span>
         </div>
         <br>
         <div>
             Vous devez deviner {{.HiddenWord}}
             <form method="POST">
-                <button type="button">Appuie pour perdre un essaie</button>
+                {{if eq .OldUserInput .UserInput}}
+                    <label>Vous avez déjà essayé ça, tentez autre chose</label><br>
+                {{else}}
+                    <label>Entrez un mot ou une lettre</label><br>
+                {{end}}
+                <input type="text" name="user_input"><br>
+                <input type="submit">
             </form>
         </div>
     {{else}}
         <div>Tu as perdu</div>
     {{end}}
+    {{.Tried}}
 </body>
 </html>

@@ -14,7 +14,11 @@
         <source src="img/HANGMANmenu.mp4" type="video/mp4">
         </video> -->
     </div>
-    {{if .Diff_choosed}}
+    {{if eq .DiffChoosed true}}
+        <div>
+            La difficulté est: {{.Difficulty}}
+        </div>
+        <a href="hangman">Continuer</a>
     {{else}}
         <h2>Bienvenue sur le jeu, choisis ta difficulté:</h2>
         <form method="POST">

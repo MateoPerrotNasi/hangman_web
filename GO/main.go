@@ -1,87 +1,97 @@
 package main
 
 import (
-	"text/template"
 	"net/http"
+	"strconv"
+	"text/template"
 	"fmt"
 )
 
 type Hangman struct {
-	OldUserInput string
 	UserInput   string
-	Word         string
-	HiddenWord   []string // mot a afficher sur l'HTML
-	Attempt      int
-	Tried        []string
-	Difficulty   string
+	Word        string
+	HiddenWord  []string
+	Attempt     int
+	Tried       []string
+	Difficulty  string
 	DiffChoosed bool
-	Win          bool
+	Win         bool
+	Link string
 }
-
-//Reprendre le tour du joueur du début
 
 func main() {
 
 	Hangman_data_blank := Hangman{
 		DiffChoosed: false,
+		Attempt:     11,
+		Word:        "",
 	}
 
 	menu := template.Must(template.ParseFiles("../HTML/menu.html"))
 
 	http.HandleFunc("/menu", func(w http.ResponseWriter, r *http.Request) {
 		Hangman_data_1 := Hangman{
-			Difficulty:   r.FormValue("difficulty"),
+			Difficulty: r.FormValue("difficulty"),
 		}
 		if Hangman_data_1.Difficulty == "Facile" || Hangman_data_1.Difficulty == "Modéré" || Hangman_data_1.Difficulty == "Difficile" {
 			Hangman_data_1.DiffChoosed = true
-			Hangman_data_blank.Difficulty = Hangman_data_1.Difficulty	
-			fmt.Println("\nDifficultée changée")
+			Hangman_data_blank.Difficulty = Hangman_data_1.Difficulty
 		}
 		Hangman_data_blank.Difficulty = Hangman_data_1.Difficulty
-
-		fmt.Println("La difficulté est:", Hangman_data_blank.Difficulty)
 
 		menu.Execute(w, Hangman_data_1)
 	})
 
+	css := http.FileServer(http.Dir("../CSS/"))
+	http.Handle("/static/", http.StripPrefix("/static/", css))
+
+	images := http.FileServer(http.Dir("../images/"))
+	http.Handle("/images/", http.StripPrefix("/images/", images))
+
 	hangman := template.Must(template.ParseFiles("../HTML/hangman.html"))
 
-	OldInput := "Ne peut pas etre égal à UserInput"
+	victory := template.Must(template.ParseFiles("../HTML/win.html"))
+
+	defeat := template.Must(template.ParseFiles("../HTML/loose.html"))
 
 	http.HandleFunc("/hangman", func(w http.ResponseWriter, r *http.Request) {
 		if Hangman_data_blank.Word == "" {
-			Hangman_data_blank.ReadFile((Hangman_data_blank.Difficulty))
-			Hangman_data_blank.CreateHidden(Hangman_data_blank.Word)
-			Hangman_data_blank.Reveal(Hangman_data_blank.Word)
+			Hangman_data_blank.ReadFile()
+			Hangman_data_blank.CreateHidden()
+			Hangman_data_blank.Reveal()
 		}
 
-
-		Hangman_data_2 := Hangman{
-			Attempt: 10,
-			Word: Hangman_data_blank.Word,
+		Hangman_data_blank = Hangman{
+			UserInput:  r.FormValue("UserInput"),
+			Difficulty: Hangman_data_blank.Difficulty,
+			Word:       Hangman_data_blank.Word,
 			HiddenWord: Hangman_data_blank.HiddenWord,
-			OldUserInput: OldInput,
-			UserInput: r.FormValue("user_input"),
+			Tried:      Hangman_data_blank.Tried,
+			Attempt:    Hangman_data_blank.Attempt,
+			Link: strconv.Itoa(Hangman_data_blank.Attempt),
+			Win:        Hangman_data_blank.Win,
 		}
-		fmt.Println("Le mot 2 est:",Hangman_data_2.Word)
-		fmt.Println("Le mot caché est:",Hangman_data_2.HiddenWord)
 
-		if Hangman_data_2.OldUserInput != Hangman_data_2.UserInput {
-			OldInput = Hangman_data_2.UserInput
-			fmt.Println("On vérifie l'input")
-			Hangman_data_2.VerifInput()
-			Hangman_data_2.Tried = append(Hangman_data_2.Tried, Hangman_data_2.UserInput)
-			fmt.Println("OldInput vaut: ",OldInput)
-			fmt.Println("OldUserInput vaut: ", Hangman_data_2.OldUserInput)
+		Hangman_data_blank.PlayerTurn()
+		Hangman_data_blank.IsWin()
+
+		if Hangman_data_blank.Win {
+			victory.Execute(w, Hangman_data_blank)
 		} else {
-			OldInput = Hangman_data_2.UserInput
-			fmt.Println("Old et New sont egaux, on ne vérifie pas")
-			fmt.Println("OldInput vaut: ",OldInput)
-			fmt.Println("OldUserInput vaut: ", Hangman_data_2.OldUserInput)
+			if Hangman_data_blank.IsLoose() {
+				defeat.Execute(w, Hangman_data_blank)
+			} else {
+				hangman.Execute(w, Hangman_data_blank)
+			}
 		}
-
-		hangman.Execute(w, Hangman_data_2)
 	})
 
+	http.HandleFunc("/hangman", func(w http.ResponseWriter, r *http.Request) {
+	})
+
+	http.HandleFunc("/hangman", func(w http.ResponseWriter, r *http.Request) {
+	})
+
+	fmt.Println("Serveur fonctionnel")
 	http.ListenAndServe(":8080", nil)
 }

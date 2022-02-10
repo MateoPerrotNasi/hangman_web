@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Schoolbell&display=swap');
+    </style>
     <title>Pendu</title>
 </head>
+
 <body>
-    {{if gt .Attempt 0}}
-        <h4>Bienvenue</h4>
-        <div>
-            <span>Il te reste {{.Attempt}} essais</span>
-        </div>
-        <br>
-        <div>
-            Vous devez deviner {{.HiddenWord}}
-            <form method="POST">
-                {{if eq .OldUserInput .UserInput}}
-                    <label>Vous avez déjà essayé ça, tentez autre chose</label><br>
-                {{else}}
-                    <label>Entrez un mot ou une lettre</label><br>
-                {{end}}
-                <input type="text" name="user_input"><br>
-                <input type="submit">
-            </form>
-        </div>
-    {{else}}
-        <div>Tu as perdu</div>
-    {{end}}
-    {{.Tried}}
+    <div class="container">
+        <h1 class="maintitle">Hangman Web</h1>
+        {{if gt .Attempt 0}}
+        <h2 class="title">Mot a trouver :{{.HiddenWord}}</h4>
+            <div class="word">
+                <img class="hangman" src="/images/hang{{.Link}}.png">
+            </div>
+            <br>
+            <span class="essai">Il te reste {{.Attempt}} essais</span>
+            <br>
+            <div>
+                <form method="POST">
+                    <label class="text_input">Entrez un mot ou une lettre : </label><br>
+                    <input class="input" type="text" name="UserInput"><br>
+                    <input class="submit" type="submit">
+                </form>
+            </div>
+        {{else}}
+            <div>Tu as perdu</div>
+        {{end}}
+            <div>
+                Vous avez déjà essayé: {{.Tried}}
+            </div>
+    </div>
 </body>
 </html>

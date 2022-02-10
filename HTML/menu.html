@@ -4,23 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Schoolbell&display=swap');
+    </style>
     <title>Hangman</title>
-    <link rel="stylesheet" href="../CSS/style.css" type="text/css">
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
 </head>
 <body>
-    <div id="all">
-        <!-- <video id="vid" autoplay loop muted>
-        <source src="img/HANGMANmenu.mp4" type="video/mp4">
-        </video> -->
-    </div>
+    <div class="container">
     {{if eq .DiffChoosed true}}
         <div>
             La difficulté est: {{.Difficulty}}
         </div>
         <a href="hangman">Continuer</a>
     {{else}}
-        <h2>Bienvenue sur le jeu, choisis ta difficulté:</h2>
+        <h2 class="maintitle">Bienvenue sur le jeu, choisis ta difficulté:</h2>
         <form method="POST">
             <div id="Options">
                 <div>
@@ -35,9 +33,10 @@
                     <input type="radio" id="hard" name="difficulty" value="Difficile">
                     <label for="hard">Difficile</label>
                 </div>
-                <input type="submit">
+                <input class="submit" type="submit">
             </div>
         </form>
     {{end}}
+</div>
 </body>
 </html>

@@ -76,20 +76,22 @@ func main() {
 		Hangman_data_blank.IsWin()
 
 		if Hangman_data_blank.Win {
-			victory.Execute(w, Hangman_data_blank)
+			http.Redirect(w, r, "/win", http.StatusSeeOther)
 		} else {
 			if Hangman_data_blank.IsLoose() {
-				defeat.Execute(w, Hangman_data_blank)
+				http.Redirect(w, r, "/loose", http.StatusSeeOther)
 			} else {
 				hangman.Execute(w, Hangman_data_blank)
 			}
 		}
 	})
 
-	http.HandleFunc("/hangman", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/win", func(w http.ResponseWriter, r *http.Request) {
+		victory.Execute(w, Hangman_data_blank)
 	})
 
-	http.HandleFunc("/hangman", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/loose", func(w http.ResponseWriter, r *http.Request) {
+		defeat.Execute(w, Hangman_data_blank)
 	})
 
 	fmt.Println("Serveur fonctionnel")

@@ -1,5 +1,3 @@
-Pour lancez le hangman web veuillez vou placez dans le fichier go et actionner la commande "go run ."
+Pour lancez le hangman web veuillez vous placer dans le fichier go et lancer la commande "go run ." dans le terminal.
 
-COUESPEL Nathan
-PERROT - - NASI Matéo
-ROCCHI Alexandre
+Réalisé par COUESPEL Nathan, PERROT--NASI Matéo etROCCHI Alexandre.
